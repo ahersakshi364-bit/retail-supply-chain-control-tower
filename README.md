@@ -153,6 +153,8 @@ retail-supply-chain-control-tower/
 ├── .env.example
 ├── .gitignore
 └── README.md
+
+
 - Windows, Linux, or macOS
 - Python environment
 - Docker Desktop and Docker Compose
