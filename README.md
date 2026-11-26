@@ -118,38 +118,41 @@ The following documents describe the system architecture, database structure, KP
 
 ## Project Structure
 
-```text
-retail-supply-chain-control-tower/
-â”‚
-â”œâ”€â”€ dags/
-â”‚   â”œâ”€â”€ supply_chain_pipeline.py
-â”‚   â””â”€â”€ supply_chain_alerts.py
-â”‚
-â”œâ”€â”€ docs/
-â”‚   â”œâ”€â”€ architecture.mmd
-â”‚   â””â”€â”€ architecture.png
-â”‚
-â”œâ”€â”€ sql/
-â”œâ”€â”€ tests/
-â”œâ”€â”€ data/
-â”‚   â”œâ”€â”€ raw/
-â”‚   â””â”€â”€ processed/
-â”‚
-â”œâ”€â”€ 01_data_exploration.ipynb
-â”œâ”€â”€ Dockerfile
-â”œâ”€â”€ docker-compose.yaml
-â”œâ”€â”€ requirements.txt
-â”œâ”€â”€ .env.example
-â”œâ”€â”€ .gitignore
-â””â”€â”€ README.md
-```
 
 Generated data, runtime logs, local configuration, and secrets are excluded from Git.
 
 ## Setup and Installation
 
 ### Prerequisites
-
+retail-supply-chain-control-tower/
+│
+├── dags/
+│   ├── supply_chain_pipeline.py
+│   └── supply_chain_alerts.py
+│
+├── docs/
+│   ├── architecture.mmd
+│   ├── architecture.png
+│   ├── data_dictionary.md
+│   ├── KPI_Documentation.txt
+│   └── workflow_documentation.md
+│
+├── sql/
+│
+├── tests/
+│   └── test_results.md
+│
+├── data/
+│   ├── raw/
+│   └── processed/
+│
+├── 01_data_exploration.ipynb
+├── Dockerfile
+├── docker-compose.yaml
+├── requirements.txt
+├── .env.example
+├── .gitignore
+└── README.md
 - Windows, Linux, or macOS
 - Python environment
 - Docker Desktop and Docker Compose
