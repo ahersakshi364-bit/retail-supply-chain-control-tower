@@ -1,0 +1,53 @@
+
+flowchart TD
+    A["DataCo Supply Chain Dataset"] --> B["Python: Data Preparation and Initial Loading"]
+    B --> C[("PostgreSQL Database")]
+
+    subgraph DB["PostgreSQL - public schema"]
+        C --> D["products"]
+        C --> E["inventory"]
+        C --> F["suppliers"]
+        C --> G["shipments"]
+        C --> H["orders"]
+        C --> I["supply_chain_anomalies"]
+        C --> J["demand_forecasts"]
+        C --> K["alert_notification_history"]
+    end
+
+    subgraph AIRFLOW["Apache Airflow - Hourly Workflows"]
+        L["Retail Supply Chain Pipeline"]
+        L --> M["Database Checks and KPI Calculations"]
+        M --> N["Anomaly Detection using Z-scores"]
+        N --> O["30-Day Demand Forecast using Prophet"]
+
+        P["Supply Chain Alerts Workflow"]
+        P --> Q["Check Low Stock and Late Shipments"]
+        Q --> R["Check Previously Sent Alerts"]
+        R --> S["Build and Send Email Alert"]
+        S --> T["Record Successful Notifications"]
+    end
+
+    D --> M
+    E --> M
+    F --> M
+    G --> M
+    H --> M
+
+    G --> N
+    E --> N
+    G --> O
+    E --> O
+    N --> I
+    O --> J
+
+    E --> Q
+    G --> Q
+    K --> R
+    T --> K
+
+    C --> U["Apache Superset"]
+    U --> V["Interactive Supply Chain Dashboard"]
+    V --> W["KPIs, Inventory, Delivery and Supplier Charts"]
+    V --> X["Supplier Delay What-If Simulation"]
+
+    S --> Y["Email Notification"]

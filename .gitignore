@@ -1,0 +1,38 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv/
+
+# Airflow logs and runtime files
+logs/
+airflow/logs/
+airflow.cfg
+*.log
+
+# Generated data files
+data/raw/*
+data/processed/*
+
+# Keep folder structure in Git
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Temporary and operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# Editor and temporary files
+.vscode/
+.idea/
+*.swp
+*.bak

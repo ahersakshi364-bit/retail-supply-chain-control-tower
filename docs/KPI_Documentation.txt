@@ -1,0 +1,80 @@
+KPI Name: Average Supplier Lead Time
+
+SQL Formula:
+ROUND(AVG(lead_time_days)::numeric, 2)
+
+Result: 7.9 days
+
+Description:
+Measures the average number of days suppliers take
+to provide products. A lower lead time generally
+indicates faster supplier performance.
+
+
+
+STEP 36: SUPPLIER PERFORMANCE ANALYSIS
+
+Total Suppliers: 10
+Average Lead Time: 7.9 days
+
+Fastest Supplier:
+SUP007 - 4 days
+
+Slowest Supplier:
+SUP006 - 12 days
+
+Supplier Performance:
+SUP007 - 4 days
+SUP001 - 5 days
+SUP004 - 6 days
+SUP010 - 7 days
+SUP002 - 7 days
+SUP005 - 8 days
+SUP008 - 9 days
+SUP003 - 10 days
+SUP009 - 11 days
+SUP006 - 12 days
+
+
+ CRITICAL INVENTORY PERCENTAGE
+
+KPI Name: Critical Inventory Percentage
+
+SQL Formula:
+COUNT of products where current_stock <= safety_stock
+divided by total products, multiplied by 100.
+
+Result: 22.03%
+
+Critical Products: 26
+Total Products: 118
+
+Description:
+Measures the percentage of products whose current
+stock is at or below their safety stock level.
+
+Business Impact:
+Helps identify products requiring urgent
+replenishment to prevent stockouts.
+
+
+
+
+
+
+STEP: LOW STOCK PERCENTAGE
+
+KPI Name: Low Stock Percentage
+
+Result: 16.95%
+
+Low Stock Products: 20
+Total Products: 118
+
+Description:
+Measures the percentage of products whose current
+stock is above safety stock but at or below reorder point.
+
+Business Impact:
+Helps the business identify products that need
+replenishment before they become critical.
