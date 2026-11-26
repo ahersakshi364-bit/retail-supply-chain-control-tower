@@ -105,6 +105,16 @@ The following results were obtained from the project database and analytical tab
 | Products classified as stock sufficient | 10 |
 
 **Note:** Anomaly counts represent detected records, not model accuracy. Forecast records represent generated predictions, not verified forecast accuracy.
+## Documentation
+
+The following documents describe the system architecture, database structure, KPIs, and automated workflows.
+
+- [System Architecture Diagram](docs/architecture.png)
+- [Architecture Source File](docs/architecture.mmd)
+- [Database Data Dictionary](docs/data_dictionary.md)
+- [KPI Documentation](docs/KPI_Documentation.txt)
+- [Airflow Workflow Documentation](docs/workflow_documentation.md)
+
 
 ## Project Structure
 

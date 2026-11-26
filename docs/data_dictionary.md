@@ -2,168 +2,227 @@
 
 ## 1. Overview
 
-This document describes the PostgreSQL tables used in the Retail & Supply Chain Control Tower project. The database supports order analysis, inventory monitoring, shipment tracking, supplier performance, anomaly detection, demand forecasting, and alert notifications.
+This document describes the PostgreSQL database schema used by the Retail & Supply Chain Control Tower.
 
-Column names and data types below are based on the database schema inspected in Superset SQL Lab.
+The database supports:
+- Order and sales analysis
+- Inventory monitoring
+- Shipment tracking
+- Supplier performance analysis
+- Statistical anomaly detection
+- Demand forecasting
+- Automated alert notification tracking
+
+The schema information was verified using PostgreSQL `information_schema.columns` and `information_schema.table_constraints`.
+
+**Database schema:** `public`
 
 ## 2. Database Tables
+
+The project uses eight documented tables.
 
 ### 2.1 Orders
 
 **Purpose:** Stores order, sales, customer, product category, and delivery information.
 
-| Column | Data type | Description |
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| product_price | numeric | Price of the product |
-| sales | numeric | Sales amount |
-| order_item_total | numeric | Total value of the order item |
-| order_profit | numeric | Profit associated with the order item |
-| order_date | timestamp | Date and time of the order |
-| shipping_date | timestamp | Date and time of shipment |
-| actual_shipping_days | integer | Actual number of days taken for shipping |
-| scheduled_shipping_days | integer | Planned shipping duration |
-| delivery_status | varchar | Delivery status |
-| late_delivery_risk | integer | Indicator of late delivery risk |
-| shipping_mode | varchar | Shipping method |
-| order_region | varchar | Region where the order was placed |
-| order_country | varchar | Country of the order |
-| order_city | varchar | City of the order |
-| customer_segment | varchar | Customer segment |
-| market | varchar | Market associated with the order |
-| category_name | varchar | Product category |
-| department_name | varchar | Department associated with the product |
+| product_price | numeric | YES |
+| sales | numeric | YES |
+| order_item_total | numeric | YES |
+| order_profit | numeric | YES |
+| order_date | timestamp without time zone | YES |
+| shipping_date | timestamp without time zone | YES |
+| actual_shipping_days | integer | YES |
+| scheduled_shipping_days | integer | YES |
+| delivery_status | character varying | YES |
+| late_delivery_risk | integer | YES |
+| shipping_mode | character varying | YES |
+| order_region | character varying | YES |
+| order_country | character varying | YES |
+| order_city | character varying | YES |
+| customer_segment | character varying | YES |
+| market | character varying | YES |
+| category_name | character varying | YES |
+| department_name | character varying | YES |
 
 ### 2.2 Shipments
 
 **Purpose:** Stores shipment timing, delivery performance, and geographical information.
 
-| Column | Data type | Description |
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| shipping_date | timestamp | Date and time of shipment |
-| actual_shipping_days | integer | Actual shipping duration |
-| scheduled_shipping_days | integer | Expected shipping duration |
-| delivery_status | varchar | Shipment delivery status |
-| late_delivery_risk | integer | Indicator of late delivery risk |
-| shipping_mode | varchar | Shipping method |
-| order_region | varchar | Region associated with the shipment |
-| order_country | varchar | Country associated with the shipment |
+| shipping_date | timestamp without time zone | YES |
+| actual_shipping_days | integer | YES |
+| scheduled_shipping_days | integer | YES |
+| delivery_status | character varying | YES |
+| late_delivery_risk | integer | YES |
+| shipping_mode | character varying | YES |
+| order_region | character varying | YES |
+| order_country | character varying | YES |
 
 ### 2.3 Products
 
 **Purpose:** Stores product information and supplier mapping.
 
-| Column | Data type | Description |
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| product_id | integer | Unique product identifier |
-| product_name | varchar | Product name |
-| supplier_id | varchar | Identifier of the associated supplier |
+| product_id | integer | NO |
+| product_name | character varying | NO |
+| supplier_id | character varying | YES |
 
 ### 2.4 Inventory
 
 **Purpose:** Stores current stock levels and inventory planning metrics.
 
-| Column | Data type | Description |
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| product_id | integer | Product identifier |
-| supplier_id | varchar | Supplier identifier |
-| average_daily_demand | numeric | Average daily product demand |
-| lead_time_days | integer | Expected supplier lead time in days |
-| safety_stock | integer | Extra stock maintained to reduce stock-out risk |
-| reorder_point | integer | Stock level at which replenishment should be considered |
-| current_stock | integer | Current available stock |
-| days_of_inventory | numeric | Estimated number of days current stock can cover |
+| product_id | integer | NO |
+| supplier_id | character varying | YES |
+| average_daily_demand | numeric | YES |
+| lead_time_days | integer | YES |
+| safety_stock | integer | YES |
+| reorder_point | integer | YES |
+| current_stock | integer | YES |
+| days_of_inventory | numeric | YES |
 
 ### 2.5 Suppliers
 
 **Purpose:** Stores supplier details and performance-related information.
 
-| Column | Data type | Description |
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| supplier_id | varchar | Unique supplier identifier |
-| supplier_name | varchar | Supplier name |
-| lead_time_days | integer | Supplier lead time in days |
-| supplier_status | varchar | Current supplier status |
+| supplier_id | character varying | NO |
+| supplier_name | character varying | NO |
+| lead_time_days | integer | NO |
+| supplier_status | character varying | NO |
 
 ### 2.6 Supply Chain Anomalies
 
-**Purpose:** Stores unusual shipment delays and demand spikes identified by anomaly detection.
+**Purpose:** Stores unusual shipment delays and demand patterns identified through statistical anomaly detection.
 
-| Column | Data type | Description |
+**Primary key:** `anomaly_id`
+
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| anomaly_id | bigint | Unique anomaly record identifier |
-| anomaly_type | varchar | Type of anomaly detected |
-| shipment_id | bigint | Related shipment identifier, where applicable |
-| product_id | integer | Related product identifier, where applicable |
-| event_date | date | Date of the detected event |
-| observed_value | numeric | Observed measurement associated with the anomaly |
-| z_score | numeric | Statistical z-score used to identify unusual observations |
-| description | text | Explanation of the detected anomaly |
-| detected_at | timestamp | Date and time when the anomaly was detected |
+| anomaly_id | bigint | NO |
+| anomaly_type | character varying | YES |
+| shipment_id | bigint | YES |
+| product_id | integer | YES |
+| event_date | date | YES |
+| observed_value | numeric | YES |
+| z_score | numeric | YES |
+| description | text | YES |
+| detected_at | timestamp without time zone | YES |
 
 ### 2.7 Demand Forecasts
 
 **Purpose:** Stores Prophet-generated product demand forecasts and stock-risk classifications.
 
-| Column | Data type | Description |
+**Primary key:** `forecast_id`
+
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| forecast_id | bigint | Unique forecast record identifier |
-| product_id | integer | Product identifier |
-| forecast_date | date | Date for which demand is forecast |
-| predicted_demand | numeric | Predicted product demand |
-| current_stock | integer | Current stock used for comparison |
-| stock_status | varchar | Stock-risk classification |
-| forecast_created_at | timestamp | Date and time when the forecast was generated |
+| forecast_id | bigint | NO |
+| product_id | integer | YES |
+| forecast_date | date | YES |
+| predicted_demand | numeric | YES |
+| current_stock | integer | YES |
+| stock_status | character varying | YES |
+| forecast_created_at | timestamp without time zone | YES |
 
 ### 2.8 Alert Notification History
 
-**Purpose:** Tracks alert keys that have already been processed to help prevent repeated notifications.
+**Purpose:** Tracks previously processed alerts to help prevent duplicate notifications.
 
-| Column | Data type | Description |
+**Primary key:** `alert_key`
+
+| Column | PostgreSQL data type | Nullable |
 |---|---|---|
-| alert_key | text | Identifier used to track a previously processed alert |
+| alert_key | text | NO |
 
-## 3. Important Relationships
+## 3. Primary Keys
 
-The following logical relationships connect the main project tables:
+The following primary keys were confirmed using PostgreSQL database metadata.
 
-- `products.product_id` → `inventory.product_id`
-- `products.product_id` → `orders.product_id`
-- `products.product_id` → `demand_forecasts.product_id`
-- `products.product_id` → `supply_chain_anomalies.product_id`
-- `suppliers.supplier_id` → `products.supplier_id`
-- `suppliers.supplier_id` → `inventory.supplier_id`
+| Table | Primary key |
+|---|---|
+| supply_chain_anomalies | anomaly_id |
+| demand_forecasts | forecast_id |
+| alert_notification_history | alert_key |
 
-Shipment and order records are also used for delivery-performance analysis.
+No declared primary keys were returned for the other five tables in the metadata query.
 
-These are logical relationships based on the project data model; they should not be interpreted as confirmed database foreign-key constraints.
+## 4. Logical Table Relationships
 
-## 4. Key Business Metrics
+The following logical relationships are used for analysis:
+
+| Parent table | Parent column | Related table | Related column |
+|---|---|---|---|
+| products | product_id | inventory | product_id |
+| products | product_id | orders | product_id |
+| products | product_id | demand_forecasts | product_id |
+| products | product_id | supply_chain_anomalies | product_id |
+| suppliers | supplier_id | products | supplier_id |
+| suppliers | supplier_id | inventory | supplier_id |
+
+Shipment and order information is used for delivery-performance analysis.
+
+**Important:** These relationships describe the logical data model. They are not confirmed foreign-key constraints.
+
+## 5. Key Business Metrics
 
 | Metric | Meaning |
 |---|---|
-| Stock-out rate | Percentage of products or observations with insufficient stock |
+| Stock-out risk | Indicates products whose available stock may be insufficient |
 | On-time delivery rate | Percentage of shipments delivered on or before the scheduled time |
 | Supplier lead time | Time taken by a supplier to provide products |
-| Days of inventory | Estimated days that current stock can satisfy demand |
+| Days of inventory | Estimated number of days current stock can cover demand |
 | Shipment delay | Difference between actual and scheduled shipping duration |
-| Demand anomaly | Unusually high demand identified using statistical analysis |
-| Forecast stock risk | Classification based on comparing current stock with predicted demand |
+| Demand anomaly | Unusual demand pattern identified using statistical analysis |
+| Forecast stock risk | Classification based on comparing available stock with predicted demand |
 
-## 5. Data and Model Notes
+## 6. Data Processing and Model Notes
 
-- The project uses historical supply-chain data.
-- Shipment and demand anomalies are detected using z-scores.
-- Shipment anomaly threshold: z-score greater than or equal to 2.
-- Demand spike threshold: z-score greater than or equal to 3.
-- Prophet is used to generate product-level demand forecasts.
-- Forecast records include current stock and a stock-status classification.
-- Forecast dates represent historical dataset periods, not live future business dates.
-- Alert history supports duplicate-notification prevention.
+### Anomaly Detection
+- Uses statistical Z-score analysis.
+- Shipment-delay anomaly threshold: Z-score greater than or equal to 2.
+- Demand-spike anomaly threshold: Z-score greater than or equal to 3.
+- Results are stored in `public.supply_chain_anomalies`.
 
-## 6. Limitations
+### Demand Forecasting
+- Uses Prophet for product-level demand forecasting.
+- Generates a 30-day forecast horizon.
+- Stores predicted demand, forecast date, current stock, and stock status.
+- Results are stored in `public.demand_forecasts`.
 
-- Forecasts are based on historical data and may not represent current market conditions.
+### Alert Processing
+- Monitors low-stock products and late shipments.
+- Uses `public.alert_notification_history` to track processed alert keys.
+- Sends email notifications for qualifying records.
+
+## 7. Data Validation Results
+
+The following record counts were verified during project validation:
+
+| Table | Records |
+|---|---:|
+| products | 118 |
+| inventory | 118 |
+| suppliers | 10 |
+| orders | 180,519 |
+| shipments | 180,519 |
+| supply_chain_anomalies | 7,168 |
+| demand_forecasts | 3,540 |
+
+Alert notification history is maintained separately as alerts are processed.
+
+## 8. Limitations
+
+- The project uses historical supply chain data rather than live operational feeds.
+- Historical data may not represent current market conditions.
 - Stock-risk classifications are estimates and do not confirm actual stock-outs.
-- Anomaly detection identifies statistical outliers and does not establish their business cause.
-- The what-if analysis is a scenario simulation, not a guaranteed prediction of future delivery performance.
+- Anomaly detection identifies statistical outliers but does not establish their business cause.
+- Forecast accuracy must be evaluated against actual future demand.
+- Logical relationships do not necessarily represent enforced database constraints.
 
