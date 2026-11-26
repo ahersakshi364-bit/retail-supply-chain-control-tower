@@ -1,441 +1,272 @@
-\# Retail \& Supply Chain Control Tower
+﻿# Retail & Supply Chain Control Tower
 
+A data analytics and automation project that monitors retail inventory, shipments, suppliers, and orders. It uses Apache Airflow to automate analytics workflows, statistical anomaly detection to identify unusual patterns, Prophet to generate demand forecasts, and Apache Superset to visualize supply chain performance.
 
+## Project Objectives
 
-A data analytics and automation project designed to monitor retail inventory, shipment performance, supplier delays, and product demand. It combines data engineering, anomaly detection, forecasting, dashboards, and automated email alerts to help identify potential supply-chain problems.
+- Monitor inventory levels and identify products at risk of low stock.
+- Analyze shipment delays and delivery performance.
+- Monitor supplier performance.
+- Detect unusual shipment delays and demand patterns.
+- Generate 30-day demand forecasts.
+- Send email alerts for low-stock products and late shipments.
+- Present key supply chain metrics through an interactive dashboard.
 
+## Technology Stack
 
-
-\## Project Overview
-
-
-
-The Retail \& Supply Chain Control Tower provides a centralized view of supply-chain operations. It processes historical retail and shipment data, stores structured information in PostgreSQL, runs automated workflows using Apache Airflow, detects unusual patterns, forecasts product demand, and displays operational insights through Apache Superset.
-
-
-
-\## Objectives
-
-
-
-\- Monitor inventory levels and identify products at risk of stockouts.
-
-\- Analyze shipment delays and delivery performance.
-
-\- Evaluate supplier performance.
-
-\- Detect unusual shipment delays and demand spikes.
-
-\- Forecast product demand using Prophet.
-
-\- Compare predicted demand with available inventory.
-
-\- Notify stakeholders about selected supply-chain risks through email alerts.
-
-
-
-\## Technology Stack
-
-
-
-| Technology | Purpose |
-
+| Component | Technology |
 |---|---|
-
-| Python | Data processing and analytics |
-
-| PostgreSQL | Relational database |
-
-| Apache Airflow | Workflow orchestration and scheduling |
-
-| Apache Superset | Interactive analytics dashboards |
-
-| Prophet | Time-series demand forecasting |
-
-| Pandas and NumPy | Data manipulation and numerical analysis |
-
-| Docker Compose | Local application environment |
-
-| Gmail SMTP | Email notifications |
-
-| SQL | Data queries and KPI calculations |
-
-
-
-\## Architecture
-
-
-
-```mermaid
-
-flowchart TD
-
-&#x20;   A\[Historical Supply Chain Dataset] --> B\[Python Data Processing]
-
-&#x20;   B --> C\[PostgreSQL Database]
-
-&#x20;   C --> D\[Apache Airflow]
-
-&#x20;   D --> E\[Data Validation]
-
-&#x20;   D --> F\[Anomaly Detection]
-
-&#x20;   D --> G\[Prophet Demand Forecasting]
-
-&#x20;   C --> H\[Apache Superset]
-
-&#x20;   F --> I\[Anomaly Results]
-
-&#x20;   G --> J\[Demand Forecast Results]
-
-&#x20;   I --> C
-
-&#x20;   J --> C
-
-&#x20;   C --> H
-
-&#x20;   D --> K\[Alert Workflow]
-
-&#x20;   K --> L\[Gmail SMTP Notifications]
-
-```
-
-
-
-\## Main Features
-
-
-
-\### 1. Data Collection and Database
-
-
-
-\- Loaded and structured supply-chain data in PostgreSQL.
-
-\- Created core tables for orders, shipments, products, inventory, and suppliers.
-
-\- Used SQL to query and validate records.
-
-
-
-\### 2. Automated Data Pipeline
-
-
-
-Apache Airflow orchestrates the main workflow through the `retail\_supply\_chain\_pipeline` DAG.
-
-
-
-The pipeline includes:
-
-\- Database connectivity checks.
-
-\- Shipment and demand anomaly detection.
-
-\- Product demand forecasting.
-
-
-
-\### 3. Supply Chain Analytics
-
-
-
-The project analyzes:
-
-\- Inventory availability.
-
-\- Shipment and delivery performance.
-
-\- Late delivery risk.
-
-\- Supplier shipping performance.
-
-\- Product demand and order trends.
-
-
-
-\### 4. Anomaly Detection
-
-
-
-Z-score-based detection is used to identify unusual patterns.
-
-
-
-\- Shipment delay threshold: Z-score >= 2.
-
-\- Demand spike threshold: Z-score >= 3.
-
-
-
-Detected records are stored in the PostgreSQL table `supply\_chain\_anomalies`.
-
-
-
-\### 5. Demand Forecasting
-
-
-
-Prophet is used to generate product-level demand forecasts.
-
-
-
-Forecast results are stored in `demand\_forecasts` and compared with current inventory to classify products as:
-
-
-
-\- `STOCK\_AT\_RISK`
-
-\- `STOCK\_SUFFICIENT`
-
-
-
-\### 6. Interactive Dashboard
-
-
-
-Apache Superset provides a dashboard named \*\*Retail \& Supply Chain Control Tower\*\*.
-
-
-
-It includes visualizations for:
-
-\- Total orders.
-
-\- Current stock by product and supplier.
-
-\- Shipment status distribution.
-
-\- Late delivery risk.
-
-\- Shipping modes.
-
-\- Average shipping days by supplier.
-
-\- Top products by order quantity.
-
-\- Order trends over time.
-
-\- Low-stock products.
-
-\- Supplier-delay what-if analysis.
-
-
-
-\### 7. Automated Email Alerts
-
-
-
-A separate Airflow DAG, `supply\_chain\_alerts`, checks for low-stock products and late shipments.
-
-
-
-Email notifications are sent through Gmail SMTP. Notification history is stored in PostgreSQL to help avoid repeated notifications for the same recorded entity.
-
-
-
-\## Project Validation Results
-
-
-
-| Test | Result |
-
-|---|---:|
-
-| Inventory records | 118 |
-
-| Order records | 180,519 |
-
-| Product records | 118 |
-
-| Shipment records | 180,519 |
-
-| Supplier records | 10 |
-
-| Shipment-delay anomalies | 6,983 |
-
-| Demand-spike anomalies | 185 |
-
-| Forecast records | 3,540 |
-
-| Products covered by forecasts | 118 |
-
-| Products classified as stock at risk | 108 |
-
-| Products classified as stock sufficient | 10 |
-
-
-
-The main Airflow pipeline completed successfully in the tested run, and the alert workflow also completed successfully.
-
-
-
-For detailed validation results, see \[`tests/test\_results.md`](tests/test\_results.md).
-
-
-
-\## Project Structure
-
-
-
-```text
-
-retail-supply-chain-control-tower/
-
-│
-
-├── dags/
-
-│   ├── supply\_chain\_pipeline.py
-
-│   └── supply\_chain\_alerts.py
-
-│
-
-├── data/
-
-│   ├── raw/
-
-│   └── processed/
-
-│
-
-├── docs/
-
-│
-
-├── sql/
-
-│
-
-├── tests/
-
-│   └── test\_results.md
-
-│
-
-├── Dockerfile
-
-├── docker-compose.yaml
-
-├── requirements.txt
-
-├── .gitignore
-
-├── README.md
-
-└── 01\_data\_exploration.ipynb
-
-```
-
-
-
-\## Running the Project
-
-
-
-\### Prerequisites
-
-
-
-\- Python
-
-\- Docker Desktop
-
-\- Docker Compose
-
-\- Git
-
-
-
-\### Setup
-
-
-
-1\. Clone the repository:
-
-
-
-&#x20;  ```bash
-
-&#x20;  git clone YOUR\_GITHUB\_REPOSITORY\_URL
-
-&#x20;  cd retail-supply-chain-control-tower
-
-&#x20;  ```
-
-
-
-2\. Create a local `.env` file containing the configuration required by the project. Use your own credentials and database settings. Never commit this file.
-
-
-
-3\. Start the Docker Compose environment:
-
-
-
-&#x20;  ```bash
-
-&#x20;  docker compose up -d --build
-
-&#x20;  ```
-
-
-
-4\. Open the Airflow interface:
-
-
-
-&#x20;  `http://localhost:8080`
-
-
-
-5\. Open the Apache Superset interface using the port configured in `docker-compose.yaml`.
-
-
-
-6\. Run the Airflow pipeline and view the resulting database tables and dashboard.
-
-
-
-\*\*Note:\*\* Exact environment variables, database initialization steps, and service configuration depend on the local setup. Do not publish passwords or application secrets.
-
-
-
-\## Limitations and Future Improvements
-
-
-
-\- The source dataset contains historical data from 2015–2018; forecasts are not live 2026 predictions.
-
-\- The supplier-delay what-if analysis currently uses a fixed seven-day scenario.
-
-\- Anomaly counts represent detected records, not model accuracy.
-
-\- Stock-risk classifications are based on forecast-versus-stock comparisons and do not prove actual stockouts.
-
-\- Future improvements could include live data ingestion, interactive what-if controls, model evaluation, and more advanced anomaly detection.
-
-
-
-\## Author
-
-
-
-Developed as a hands-on data engineering and analytics project demonstrating Python, SQL, PostgreSQL, Apache Airflow, Prophet, Docker, and Apache Superset.
-
-
-
-\---
-
+| Programming | Python |
+| Database | PostgreSQL |
+| Workflow orchestration | Apache Airflow |
+| Dashboard | Apache Superset |
+| Data processing | Pandas |
+| Anomaly detection | Statistical Z-score analysis |
+| Demand forecasting | Prophet |
+| Containerization | Docker and Docker Compose |
+| Version control | Git and GitHub |
 
 ## System Architecture
 
-The following diagram illustrates the architecture of the Retail & Supply Chain Control Tower, including PostgreSQL data storage, Apache Airflow workflows, anomaly detection, demand forecasting, email alerts, and the Apache Superset dashboard.
+The architecture diagram illustrates the data flow, database, automated workflows, analytics, forecasting, alerts, and dashboard.
 
 ![Retail Supply Chain Control Tower Architecture](docs/architecture.png)
 
+Architecture source: `docs/architecture.mmd`
 
+## Main Features
 
-\*\*Project:\*\* Retail \& Supply Chain Control Tower
+### 1. Data Preparation and Storage
+- Loads the supply chain dataset into PostgreSQL.
+- Stores products, inventory, suppliers, shipments, and orders in separate tables.
+- Uses Python and Pandas for data preparation.
 
+### 2. Automated Data Pipeline
+Apache Airflow runs the `retail_supply_chain_pipeline` DAG hourly.
+
+The workflow:
+- Checks database connectivity and table records.
+- Calculates supply chain performance metrics.
+- Identifies unusual shipment delays and demand patterns.
+- Generates demand forecasts for the next 30 days.
+- Saves analytical results in PostgreSQL.
+
+### 3. Anomaly Detection
+Uses statistical Z-score analysis to identify unusual shipment-delay and demand patterns.
+
+Results are stored in:
+
+`public.supply_chain_anomalies`
+
+### 4. Demand Forecasting
+Uses Facebook Prophet to generate 30-day demand forecasts.
+
+Results are stored in:
+
+`public.demand_forecasts`
+
+### 5. Automated Email Alerts
+The `supply_chain_alerts` Airflow DAG checks for:
+- Products with stock below their reorder point.
+- Late shipments and shipments identified as having late-delivery risk.
+
+Email notifications are sent for qualifying records. Notification history is stored in PostgreSQL to help prevent repeated alerts for the same records.
+
+### 6. Interactive Dashboard
+Apache Superset provides visualizations for:
+- Total orders.
+- Current stock by product and supplier.
+- Low-stock products.
+- Shipment status distribution.
+- Late-delivery risk.
+- Shipping-mode distribution.
+- Average shipping days by supplier.
+- Top products by order quantity.
+- Order trends over time.
+- Supplier delay what-if simulation.
+
+## Project Validation Results
+
+The following results were obtained from the project database and analytical tables.
+
+| Metric | Result |
+|---|---:|
+| Products | 118 |
+| Inventory records | 118 |
+| Suppliers | 10 |
+| Orders | 180,519 |
+| Shipments | 180,519 |
+| Shipment-delay anomaly records | 6,983 |
+| Demand anomaly records | 185 |
+| Total anomaly records | 7,168 |
+| Demand forecast records | 3,540 |
+| Products covered by forecasts | 118 |
+| Products classified as stock at risk | 108 |
+| Products classified as stock sufficient | 10 |
+
+**Note:** Anomaly counts represent detected records, not model accuracy. Forecast records represent generated predictions, not verified forecast accuracy.
+
+## Project Structure
+
+```text
+retail-supply-chain-control-tower/
+â”‚
+â”œâ”€â”€ dags/
+â”‚   â”œâ”€â”€ supply_chain_pipeline.py
+â”‚   â””â”€â”€ supply_chain_alerts.py
+â”‚
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ architecture.mmd
+â”‚   â””â”€â”€ architecture.png
+â”‚
+â”œâ”€â”€ sql/
+â”œâ”€â”€ tests/
+â”œâ”€â”€ data/
+â”‚   â”œâ”€â”€ raw/
+â”‚   â””â”€â”€ processed/
+â”‚
+â”œâ”€â”€ 01_data_exploration.ipynb
+â”œâ”€â”€ Dockerfile
+â”œâ”€â”€ docker-compose.yaml
+â”œâ”€â”€ requirements.txt
+â”œâ”€â”€ .env.example
+â”œâ”€â”€ .gitignore
+â””â”€â”€ README.md
+```
+
+Generated data, runtime logs, local configuration, and secrets are excluded from Git.
+
+## Setup and Installation
+
+### Prerequisites
+
+- Windows, Linux, or macOS
+- Python environment
+- Docker Desktop and Docker Compose
+- PostgreSQL
+- Git
+- Apache Superset (configured separately)
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/ahersakshi364-bit/retail-supply-chain-control-tower.git
+cd retail-supply-chain-control-tower
+```
+
+### 2. Configure environment variables
+
+Copy the example environment file:
+
+**Windows PowerShell:**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Edit `.env` and replace the example values with your own configuration.
+
+Required variables:
+
+- `AIRFLOW_UID`
+- `FERNET_KEY`
+- `GMAIL_SENDER`
+- `GMAIL_APP_PASSWORD`
+- `GMAIL_RECEIVER`
+
+Keep `.env` private. Never commit passwords, application passwords, or other secrets.
+
+### 3. Prepare PostgreSQL
+
+Install and start PostgreSQL. Create a database named:
+
+```text
+retail_supply_chain
+```
+
+Create a PostgreSQL user with the necessary permissions for the project database.
+
+Use `01_data_exploration.ipynb` to prepare the dataset and load the project tables into PostgreSQL. The notebook requests the database password interactively.
+
+### 4. Configure the Airflow PostgreSQL connection
+
+Start Airflow first, then open the Airflow web interface.
+
+Create a connection with these settings:
+
+| Field | Value |
+|---|---|
+| Connection ID | `retail_postgres` |
+| Connection Type | PostgreSQL |
+| Host | `host.docker.internal` |
+| Database | `retail_supply_chain` |
+| Login | Your PostgreSQL project username |
+| Port | `5432` |
+| Password | Your PostgreSQL project password |
+
+`host.docker.internal` allows Docker containers to reach PostgreSQL running on the host machine. If PostgreSQL is hosted elsewhere, use the appropriate database hostname.
+
+### 5. Start Apache Airflow
+
+Build and start the Airflow services:
+
+```bash
+docker compose up -d --build
+```
+
+Check the running services:
+
+```bash
+docker compose ps
+```
+
+Open Airflow:
+
+http://localhost:8080
+
+Log in using the Airflow credentials configured for your local environment.
+
+### 6. Run the workflows
+
+In Airflow, enable and run:
+
+- `retail_supply_chain_pipeline`
+- `supply_chain_alerts`
+
+The main pipeline performs database checks, analytics, anomaly detection, and demand forecasting. The alert workflow checks qualifying low-stock products and late shipments and sends email notifications.
+
+### 7. Configure Apache Superset
+
+Apache Superset is configured separately and is not started by this project's Docker Compose file.
+
+Install or start Superset separately, then configure a PostgreSQL database connection to the `retail_supply_chain` database.
+
+Open the dashboard at:
+
+http://localhost:8088
+
+The Superset database connection must use a hostname and credentials accessible from the Superset environment.
+
+## Limitations
+
+- The project uses historical supply chain data rather than live operational feeds.
+- The dataset represents historical records from 2015â€“2018; forecasts are not live 2026 demand predictions.
+- The supplier-delay what-if simulation uses a fixed seven-day scenario.
+- Anomaly counts indicate flagged records and do not establish detection accuracy.
+- Stock-risk classifications are based on forecast-versus-stock comparisons and do not prove actual stockouts.
+- Forecast accuracy requires evaluation against actual future demand.
+
+## Future Improvements
+
+- Integrate live data ingestion.
+- Add interactive what-if controls.
+- Evaluate forecasting performance using suitable accuracy metrics.
+- Improve anomaly detection with additional statistical and machine-learning methods.
+- Extend alerting and monitoring capabilities.
+
+## Author
+
+Developed as a Retail & Supply Chain Control Tower project to demonstrate data engineering, analytics, workflow automation, forecasting, and dashboard development.
+
+**GitHub Repository:**
+https://github.com/ahersakshi364-bit/retail-supply-chain-control-tower
